@@ -1,0 +1,94 @@
+swagger: '2.0'
+info:
+  x-ibm-name: bank-branches
+  title: Bank Branches
+  version: '2.0'
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /bankbranches
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  clientSecretHeader:
+    type: apiKey
+    description: ''
+    in: header
+    name: X-IBM-Client-Secret
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - clientIdHeader: []
+    clientSecretHeader: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: 'https://apim-services.mybluemix.net/banka/v1/branches'
+          secure-gateway: false
+          title: Branches Invoke
+          description: >-
+            Invoke an API to retrieve the status of all branches in the BankA
+            System
+    catch: []
+  gateway: datapower-gateway
+paths:
+  /details:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/branch'
+      summary: Branch Details
+      operationId: ''
+      description: Retrieve details of the current branches of BankA
+definitions:
+  branch:
+    properties:
+      id:
+        type: string
+        description: The ID of the branch
+        example: 9d72ece0-7e7b-11e5-9038-55f9f9c08c06
+      type:
+        type: string
+        description: the type of branch
+        example: atm
+      address:
+        description: the address of the branch
+        $ref: '#/definitions/address'
+    additionalProperties: false
+    description: format of the branch field
+  address:
+    properties:
+      zip_code:
+        type: string
+        description: zip code of the address
+        example: '27589'
+      state:
+        type: string
+        description: state of the address
+        example: NC
+      city:
+        type: string
+        description: city of the address
+        example: Warrenton
+      street2:
+        type: string
+        description: second line
+        example: Suite 300
+      street1:
+        type: string
+        description: first line
+        example: 129 Battle Avenue
+    additionalProperties: false
+    description: the format of the address
+tags: []
